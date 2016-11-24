@@ -186,6 +186,7 @@ void MRG::creatTestGraphinLevel(int range, MRGPattern *e, string es)
 		initFinestGraphNode(e->graph2[0][graph_level][i], _v2d_(1.0 / e->level_array.at(0) * range, 1.0 / e->level_array.at(0) * (range + 1)), as_l, adjancenum.size(), tempa, treeindex, partindex, 0, graph_level, i);
 
 		//put the graph into the candidate array for the corser graph
+		e->node_array[e->node_number]->level_num = 0;
 		e->node_array[e->node_number]->range_num = graph_level;
 		e->node_array[e->node_number]->node_num = i;
 
@@ -247,7 +248,7 @@ void MRG::creatTestOtherGraph(int level, MRGPattern *e, string es)
 		vector<MRGNode*> child_array;
 		//the selected node
 		//cout << "selected node:" << node_array[i]->range_num << node_array[i]->node_num << endl;
-		MRGNode *p = e->graph2[0][e->node_array[i]->range_num][e->node_array[i]->node_num];
+		MRGNode *p = e->graph2[e->node_array[i]->level_num][e->node_array[i]->range_num][e->node_array[i]->node_num];
 		selected_node.push_back(_v2d_(e->node_array[i]->range_num, e->node_array[i]->node_num));
 		//new range
 		int new_range = e->node_array[i]->range_num;
@@ -271,7 +272,7 @@ void MRG::creatTestOtherGraph(int level, MRGPattern *e, string es)
 			{
 				if (p->adjacentNodes[j]->range_num % 2 == 1 && p->adjacentNodes[j]->range_num > new_range)
 				{
-					MRGNode *p_can = e->graph2[0][p->adjacentNodes[j]->range_num][p->adjacentNodes[j]->node_num];
+					MRGNode *p_can = e->graph2[p->adjacentNodes[j]->level_num][p->adjacentNodes[j]->range_num][p->adjacentNodes[j]->node_num];
 					selected_node.push_back(_v2d_(p->adjacentNodes[j]->range_num, p->adjacentNodes[j]->node_num));
 					//calculate the new message for the parent node
 					new_message_x = new_message_x + p_can->rmessage[0];
@@ -290,7 +291,7 @@ void MRG::creatTestOtherGraph(int level, MRGPattern *e, string es)
 				child[i]->range_num = child_array.at(i)->nrange;
 				child[i]->node_num = child_array.at(i)->nnumber;
 			}
-			initGraphNodewithChild(parent, _v2d_(1.0 / e->level_array.at(level) * new_range, 1.0 / e->level_array.at(level) * (new_range + 1)), _v2d_(new_message_x, new_message_y), 0, NULL, p->treenum, p->partnum, child, level, e->level_array.at(level) - new_range - 1, temp_node_array.at(e->level_array.at(level) - new_range - 1).size());
+			initGraphNodewithChild(parent, _v2d_(1.0 / e->level_array.at(level) * new_range, 1.0 / e->level_array.at(level) * (new_range + 1)), _v2d_(new_message_x, new_message_y), 0, NULL, p->treenum, p->partnum, child_array.size(),child, level, e->level_array.at(level) - new_range - 1, temp_node_array.at(e->level_array.at(level) - new_range - 1).size());
 			//get a new node
 			new_node_number++;
 			parentLM->level_num = level;
@@ -305,7 +306,7 @@ void MRG::creatTestOtherGraph(int level, MRGPattern *e, string es)
 			{
 				if (p->adjacentNodes[j]->range_num % 2 == 0 && p->adjacentNodes[j]->range_num < new_range)
 				{
-					MRGNode *p_can = e->graph2[0][p->adjacentNodes[j]->range_num][p->adjacentNodes[j]->node_num];
+					MRGNode *p_can = e->graph2[p->adjacentNodes[j]->level_num][p->adjacentNodes[j]->range_num][p->adjacentNodes[j]->node_num];
 					selected_node.push_back(_v2d_(p->adjacentNodes[j]->range_num, p->adjacentNodes[j]->node_num));
 					//calculate the new message for the parent node
 					new_message_x = new_message_x + p_can->rmessage[0];
@@ -324,7 +325,7 @@ void MRG::creatTestOtherGraph(int level, MRGPattern *e, string es)
 				child[i]->range_num = child_array.at(i)->nrange;
 				child[i]->node_num = child_array.at(i)->nnumber;
 			}
-			initGraphNodewithChild(parent, _v2d_(1.0 / e->level_array.at(level) * new_range, 1.0 / e->level_array.at(level) * (new_range + 1)), _v2d_(new_message_x, new_message_y), 0, NULL, p->treenum, p->partnum, child, level, e->level_array.at(level) - new_range - 1, temp_node_array.at(e->level_array.at(level) - new_range - 1).size());
+			initGraphNodewithChild(parent, _v2d_(1.0 / e->level_array.at(level) * new_range, 1.0 / e->level_array.at(level) * (new_range + 1)), _v2d_(new_message_x, new_message_y), 0, NULL, p->treenum, p->partnum, child_array.size(),child, level, e->level_array.at(level) - new_range - 1, temp_node_array.at(e->level_array.at(level) - new_range - 1).size());
 			//get a new node
 			new_node_number++;
 			parentLM->level_num = level;
@@ -357,11 +358,12 @@ void MRG::creatTestOtherGraph(int level, MRGPattern *e, string es)
 		{
 			//cout << i << " " << j << endl;
 			e->graph2[level][i][j] = temp_node_array.at(i).at(j);
+			e->node_array[node_num + j]->level_num = level;
 			e->node_array[node_num + j]->range_num = i;
 			e->node_array[node_num + j]->node_num = j;
 		}
 		node_num = node_num + temp_node_array.at(i).size();
-		showMRGGaphinLevelandRange(e, level, i, temp_node_array.at(i).size());
+		//showMRGGaphinLevelandRange(e, level, i, temp_node_array.at(i).size());
 	}
 
 	//find the adjance node for every node
@@ -384,6 +386,7 @@ void MRG::creatTestOtherGraph(int level, MRGPattern *e, string es)
 					if (e->graph2[level][i + 1][k]->partnum == p->partnum)
 					{
 						Location_Message *lm = new Location_Message;
+						lm->level_num = level;
 						lm->range_num = i + 1;
 						lm->node_num = k;
 						adjance_node.push_back(lm);
@@ -400,6 +403,7 @@ void MRG::creatTestOtherGraph(int level, MRGPattern *e, string es)
 					if (e->graph2[level][i - 1][k]->partnum == p->partnum)
 					{
 						Location_Message *lm = new Location_Message;
+						lm->level_num = level;
 						lm->range_num = i - 1;
 						lm->node_num = k;
 						adjance_node.push_back(lm);
@@ -412,6 +416,7 @@ void MRG::creatTestOtherGraph(int level, MRGPattern *e, string es)
 			{
 				tempa[k] = adjance_node.at(k);
 			}
+			p->adjacentNodeNumber = adjance_node.size();
 			p->adjacentNodes = tempa;
 			adjance_node.clear();
 
@@ -437,9 +442,9 @@ void MRG::changeFinestChildandCorestParent(MRGPattern * e)
 	//the nodes in corest level have no parents
 	for (int i = 0; i < e->levelrangenodenumber.at(e->levelrangenodenumber.size() - 1).size(); i++)
 	{
-		for (int j = 0; j < e->levelrangenodenumber.at(0).at(i).at(0); j++)
+		for (int j = 0; j < e->levelrangenodenumber.at(e->levelrangenodenumber.size() - 1).at(i).at(0); j++)
 		{
-			MRGNode *p = e->graph2[0][i][j];
+			MRGNode *p = e->graph2[e->levelrangenodenumber.size() - 1][i][j];
 			p->parentNode = NULL;
 		}
 	}
@@ -480,7 +485,7 @@ void MRG::initGraphNodewithParent(MRGNode * e, v2d range, v2d message, int adjac
 	e->nnumber = nnumber;
 }
 
-void MRG::initGraphNodewithChild(MRGNode * e, v2d range, v2d message, int adjacentNodeNumber, Location_Message** adjacentNodes, int treenum, int partnum, Location_Message** child, int nlevel, int nrange, int nnumber)
+void MRG::initGraphNodewithChild(MRGNode * e, v2d range, v2d message, int adjacentNodeNumber, Location_Message** adjacentNodes, int treenum, int partnum, int childnum,Location_Message** child, int nlevel, int nrange, int nnumber)
 {
 	//e = new MRGNode;
 	e->range = range;
@@ -488,6 +493,7 @@ void MRG::initGraphNodewithChild(MRGNode * e, v2d range, v2d message, int adjace
 	e->adjacentNodeNumber = adjacentNodeNumber;
 	e->adjacentNodes = adjacentNodes;
 	//e->parentNode = NULL;
+	e->childNodeNumber = childnum;
 	e->childNodes = child;
 	e->treenum = treenum;
 	e->partnum = partnum;
@@ -524,6 +530,60 @@ void MRG::showLevelRangeNodeNumber(MRGPattern *e)
 	}
 	cout << endl;
 }
+
+void MRG::showAllMesasgeinNode(ofstream f1,MRGNode * e)
+{
+	f1 << "range: " << e->range[0] << " " << e->range[1] << endl;
+	f1 << "message: " << e->rmessage[0] << " " << e->rmessage[1] << endl;
+	f1 << "treenum&partnum: " << e->treenum << " " << e->partnum << endl;
+	f1 << "nlevel&&nrange&&nnumber: " << e->nlevel << " " << e->nrange << " " << e->nnumber << endl;
+	f1 << "Xnum: " << e->Xnum << endl;
+	f1 << "adjanceNode number:" << e->adjacentNodeNumber << endl;
+	f1 << "childnode number:" << e->childNodeNumber << endl;
+	f1 << "parentnode" << e->parentNode << endl;
+}
+
+void MRG::CheckMRGPattern(MRGPattern * e)
+{
+	ofstream f1("D:\\MRGCheck.txt");
+	for (int i = 0; i < e->levelrangenodenumber.size(); i++)
+	{
+		f1 << "level "<< i << ": " << endl;
+		for (int j = 0; j < e->levelrangenodenumber.at(i).size(); j++)
+		{
+			f1 << "range " << i << j << ": " << endl;
+			for (int k = 0; k < e->levelrangenodenumber.at(i).at(j).at(0); k++)
+			{
+				MRGNode * p = e->graph2[i][j][k];
+				f1 << "range: " << p->range[0] << " " << p->range[1] << endl;
+				f1 << "message: " << p->rmessage[0] << " " << p->rmessage[1] << endl;
+				f1 << "treenum&partnum: " << p->treenum << " " << p->partnum << endl;
+				f1 << "nlevel&&nrange&&nnumber: " << p->nlevel << " " << p->nrange << " " << p->nnumber << endl;
+				f1 << "Xnum: " << p->Xnum << endl;
+				f1 << "adjanceNode number:" << p->adjacentNodeNumber << endl;
+				for (int l = 0; l < p->adjacentNodeNumber; l++)
+				{
+					f1 << "  " << l << ": " << p->adjacentNodes[l]->level_num << p->adjacentNodes[l]->range_num << p->adjacentNodes[l]->node_num << endl;
+				}
+				f1 << "childnode number:" << p->childNodeNumber << endl;
+				for (int l = 0; l < p->childNodeNumber; l++)
+				{
+					f1 << "  " << l << ": " << p->childNodes[l]->level_num << p->childNodes[l]->range_num << p->childNodes[l]->node_num << endl;
+				}
+				if (p->parentNode == NULL)
+				{
+					f1 << "parentnode: " << "NULL" << endl;
+				}
+				else f1 << "parentnode: " << p->parentNode->level_num << p->parentNode->range_num << p->parentNode->node_num << endl;
+				f1 << endl;
+			}
+		}
+	}
+	
+	cout << "check end!"<< endl;
+	f1.close();
+}
+
 
 void MRG::matchingAlgorithm(MRGPattern * a, MRGPattern * b)
 {

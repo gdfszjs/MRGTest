@@ -14,6 +14,7 @@ int main()
 	MRGPattern *a = new MRGPattern;
 	string e = "D:\\MRGFIle\\1\\1\\";
 	mrg.initialize(a, e);
+	mrg.CheckMRGPattern(a);
 	//mrg.showLevelRangeNodeNumber(a);
 
 	//the other pattern

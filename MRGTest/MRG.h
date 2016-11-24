@@ -116,11 +116,15 @@ public:
 	// init GraphNode with Parent
 	void initGraphNodewithParent(MRGNode * e, v2d range, v2d message, int adjacentNodeNumber, Location_Message ** adjacentNodes, int treenum, int partnum, Location_Message * parent, int nlevel, int nrange, int nnumber);
 	// init GraphNode with Child
-	void initGraphNodewithChild(MRGNode * e, v2d range, v2d message, int adjacentNodeNumber, Location_Message ** adjacentNodes, int treenum, int partnum, Location_Message ** child, int nlevel, int nrange, int nnumber);
+	void initGraphNodewithChild(MRGNode * e, v2d range, v2d message, int adjacentNodeNumber, Location_Message ** adjacentNodes, int treenum, int partnum, int childnum,Location_Message ** child, int nlevel, int nrange, int nnumber);
 	// init Finest GraphNode
 	void initFinestGraphNode(MRGNode * e, v2d range, v2d message, int adjacentNodeNumber, Location_Message ** adjacentNodes, int treenum, int partnum, int nlevel, int nrange, int nnumber);
 	// show the levelrangenodenumber in one MRGPattern
 	void showLevelRangeNodeNumber(MRGPattern *e);
+	//show all the message in a node
+	void showAllMesasgeinNode(ofstream f1, MRGNode *e);
+	//check MRGPattern
+	void CheckMRGPattern(MRGPattern *e);
 
 	/*
 		function fot the graph comparation
