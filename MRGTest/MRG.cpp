@@ -195,7 +195,7 @@ void MRG::creatTestGraphinLevel(int range, MRGPattern *e, string es)
 	}
 
 	e->levelrangenodenumber.at(0).at(e->level_array.at(0) - (range + 1)).push_back(i);
-	showMRGGaphinLevelandRange(e,0, graph_level, nodenum);
+	//showMRGGaphinLevelandRange(e,0, graph_level, nodenum);
 }
 
 void MRG::creatTestAllGraph(MRGPattern *e, string es)
@@ -291,7 +291,7 @@ void MRG::creatTestOtherGraph(int level, MRGPattern *e, string es)
 				child[i]->range_num = child_array.at(i)->nrange;
 				child[i]->node_num = child_array.at(i)->nnumber;
 			}
-			initGraphNodewithChild(parent, _v2d_(1.0 / e->level_array.at(level) * new_range, 1.0 / e->level_array.at(level) * (new_range + 1)), _v2d_(new_message_x, new_message_y), 0, NULL, p->treenum, p->partnum, child_array.size(),child, level, e->level_array.at(level) - new_range - 1, temp_node_array.at(e->level_array.at(level) - new_range - 1).size());
+			initGraphNodewithChild(parent, _v2d_(1.0 / e->level_array.at(level) * new_range, 1.0 / e->level_array.at(level) * (new_range + 1)), _v2d_(new_message_x, new_message_y), 0, NULL, p->treenum, p->partnum, child_array.size(), child, level, e->level_array.at(level) - new_range - 1, temp_node_array.at(e->level_array.at(level) - new_range - 1).size());
 			//get a new node
 			new_node_number++;
 			parentLM->level_num = level;
@@ -325,7 +325,7 @@ void MRG::creatTestOtherGraph(int level, MRGPattern *e, string es)
 				child[i]->range_num = child_array.at(i)->nrange;
 				child[i]->node_num = child_array.at(i)->nnumber;
 			}
-			initGraphNodewithChild(parent, _v2d_(1.0 / e->level_array.at(level) * new_range, 1.0 / e->level_array.at(level) * (new_range + 1)), _v2d_(new_message_x, new_message_y), 0, NULL, p->treenum, p->partnum, child_array.size(),child, level, e->level_array.at(level) - new_range - 1, temp_node_array.at(e->level_array.at(level) - new_range - 1).size());
+			initGraphNodewithChild(parent, _v2d_(1.0 / e->level_array.at(level) * new_range, 1.0 / e->level_array.at(level) * (new_range + 1)), _v2d_(new_message_x, new_message_y), 0, NULL, p->treenum, p->partnum, child_array.size(), child, level, e->level_array.at(level) - new_range - 1, temp_node_array.at(e->level_array.at(level) - new_range - 1).size());
 			//get a new node
 			new_node_number++;
 			parentLM->level_num = level;
@@ -485,7 +485,7 @@ void MRG::initGraphNodewithParent(MRGNode * e, v2d range, v2d message, int adjac
 	e->nnumber = nnumber;
 }
 
-void MRG::initGraphNodewithChild(MRGNode * e, v2d range, v2d message, int adjacentNodeNumber, Location_Message** adjacentNodes, int treenum, int partnum, int childnum,Location_Message** child, int nlevel, int nrange, int nnumber)
+void MRG::initGraphNodewithChild(MRGNode * e, v2d range, v2d message, int adjacentNodeNumber, Location_Message** adjacentNodes, int treenum, int partnum, int childnum, Location_Message** child, int nlevel, int nrange, int nnumber)
 {
 	//e = new MRGNode;
 	e->range = range;
@@ -531,7 +531,7 @@ void MRG::showLevelRangeNodeNumber(MRGPattern *e)
 	cout << endl;
 }
 
-void MRG::showAllMesasgeinNode(ofstream f1,MRGNode * e)
+void MRG::showAllMesasgeinNode(ofstream f1, MRGNode * e)
 {
 	f1 << "range: " << e->range[0] << " " << e->range[1] << endl;
 	f1 << "message: " << e->rmessage[0] << " " << e->rmessage[1] << endl;
@@ -543,12 +543,12 @@ void MRG::showAllMesasgeinNode(ofstream f1,MRGNode * e)
 	f1 << "parentnode" << e->parentNode << endl;
 }
 
-void MRG::CheckMRGPattern(MRGPattern * e)
+void MRG::CheckMRGPattern(MRGPattern * e, string ss)
 {
-	ofstream f1("D:\\MRGCheck.txt");
+	ofstream f1(ss + "MRGCheck.txt");
 	for (int i = 0; i < e->levelrangenodenumber.size(); i++)
 	{
-		f1 << "level "<< i << ": " << endl;
+		f1 << "level " << i << ": " << endl;
 		for (int j = 0; j < e->levelrangenodenumber.at(i).size(); j++)
 		{
 			f1 << "range " << i << j << ": " << endl;
@@ -579,8 +579,8 @@ void MRG::CheckMRGPattern(MRGPattern * e)
 			}
 		}
 	}
-	
-	cout << "check end!"<< endl;
+
+	cout << "check end!" << endl;
 	f1.close();
 }
 
@@ -623,7 +623,7 @@ bool MRG::com(MRGNode * m, MRGNode * n)
 	else return false;
 }
 
-Rmessage MRG::adj(Range c, MRGPattern *e,MRGNode *m)
+Rmessage MRG::adj(Range c, MRGPattern *e, MRGNode *m)
 {
 	int rm1 = 0;
 	int rm2 = 0;
@@ -643,7 +643,7 @@ Rmessage MRG::adj(Range c, MRGPattern *e,MRGNode *m)
 			}
 		}
 	}
-	return _v2d_(rm1,rm2);
+	return _v2d_(rm1, rm2);
 }
 
 void MRG::initialization(MRGPattern * a, MRGPattern * b)
@@ -720,18 +720,21 @@ NodePair* MRG::findmatchingpair(MRGPattern * a, MRGPattern * b)
 		candidate_n = NLIST.at(i);
 		if (candidate_n->range[0] == temp_m->range[0] && candidate_n->range[1] == temp_m->range[1])
 		{
-			if (compareMLIST(temp_m,candidate_n))
+			if (compareMLIST(temp_m, candidate_n))
 			{
 				if (candidate_n->treenum != temp_m->treenum)
 				{
 					if (findParentinMLIST(candidate_n, temp_m))
 					{
-						temp_n.push_back(i);
+						if (candidate_n->partnum == temp_m->partnum)
+						{
+							temp_n.push_back(i);
+						}
 					}
 				}
 			}
 		}
-		
+
 	}
 
 	//match failed
@@ -753,7 +756,7 @@ NodePair* MRG::findmatchingpair(MRGPattern * a, MRGPattern * b)
 		int mat_result = 0;
 		for (int i = 0; i < temp_n.size(); i++)
 		{
-			int temp_mat_result = mat(a,b,temp_m, NLIST.at(temp_n.at(i)));
+			int temp_mat_result = mat(a, b, temp_m, NLIST.at(temp_n.at(i)));
 			if (temp_mat_result > mat_result)
 			{
 				mat_result = temp_mat_result;
@@ -767,14 +770,13 @@ NodePair* MRG::findmatchingpair(MRGPattern * a, MRGPattern * b)
 	}
 
 	//remove node n
-	
+
 
 	//return NM pair
 	NodePair *result_pair = new NodePair;
 	result_pair->m = temp_m;
 	result_pair->n = selected_n;
-	extendMLIST(a,temp_m); 
-	extendMLIST(b, selected_n);
+	spreadMLIST(a, b, temp_m, selected_n);
 	return result_pair;
 }
 
@@ -784,7 +786,7 @@ bool MRG::compareMLIST(MRGNode * m, MRGNode * n)
 	{
 		return true;
 	}
-	if (findParentinMLIST(m->Xnum,n->Xnum))
+	if (findParentinMLIST(m->Xnum, n->Xnum))
 	{
 		return true;
 	}
@@ -819,49 +821,25 @@ bool MRG::findParentinMLIST(MRGNode * m, MRGNode * n)
 	return false;
 }
 
-void MRG::extendMLIST(MRGPattern * a,MRGNode * m)
+void MRG::spreadMLIST(MRGPattern * a, MRGPattern * b, MRGNode * m, MRGNode * n)
 {
-	int nodenum = 0;
-	int index = 0;
-	//upper branch
-	for (int i = 0; i < m->adjacentNodeNumber; i++)
-	{
-		if (m->adjacentNodes[i]->range_num == m->nrange + 1)
-		{
-			nodenum++;
-			index = i;
-			a->graph2[m->adjacentNodes[i]->level_num][m->adjacentNodes[i]->range_num][m->adjacentNodes[i]->node_num]->Xnum = m;
-		}
-	}
-	if (nodenum == 1)
-	{
-		extendMLIST(a, a->graph2[m->adjacentNodes[index]->level_num][m->adjacentNodes[index]->range_num][m->adjacentNodes[index]->node_num]);
-	}
-	if (nodenum == 0 && nodenum > 1)
-	{
-		return;
-	}
-	//lower branch
-	for (int i = 0; i < m->adjacentNodeNumber; i++)
-	{
-		if (m->adjacentNodes[i]->range_num == m->nrange - 1)
-		{
-			nodenum++;
-			index = i;
-			a->graph2[m->adjacentNodes[i]->level_num][m->adjacentNodes[i]->range_num][m->adjacentNodes[i]->node_num]->Xnum = m;
-		}
-	}
-	if (nodenum == 1)
-	{
-		extendMLIST(a, a->graph2[m->adjacentNodes[index]->level_num][m->adjacentNodes[index]->range_num][m->adjacentNodes[index]->node_num]);
-	}
-	if (nodenum == 0 && nodenum > 1)
-	{
-		return;
-	}
+	//monotone increasing
+	extendMLISTinOneDirection(a, m, 1);
+	//monotone decreasing
+	extendMLISTinOneDirection(a, m, -1);
+
+	//monotone increasing
+	extendMLISTinOneDirection(b, n, 1);
+	//monotone decreasing
+	extendMLISTinOneDirection(b, n, -1);
 }
 
-int MRG::mat(MRGPattern *a, MRGPattern *b,MRGNode * m, MRGNode * n)
+void MRG::extendMLISTinOneDirection(MRGPattern * a, MRGNode * m, int direcion)
+{
+
+}
+
+int MRG::mat(MRGPattern *a, MRGPattern *b, MRGNode * m, MRGNode * n)
 {
 	double LossMN = loss(m->rmessage, n->rmessage);
 	double LossADJ = 0;
@@ -870,7 +848,7 @@ int MRG::mat(MRGPattern *a, MRGPattern *b,MRGNode * m, MRGNode * n)
 		//upper range
 		double r1 = m->range[0] + 1.0 / a->levelrangenodenumber.at(m->nlevel).size();
 		double r2 = m->range[1] + 1.0 / a->levelrangenodenumber.at(m->nlevel).size();
-		LossADJ += loss(adj(_v2d_(r1,r2), a, m), adj(_v2d_(r1, r2), b, n));
+		LossADJ += loss(adj(_v2d_(r1, r2), a, m), adj(_v2d_(r1, r2), b, n));
 		//lower range
 		r1 = m->range[0] - 1.0 / a->levelrangenodenumber.at(m->nlevel).size();
 		r2 = m->range[1] - 1.0 / a->levelrangenodenumber.at(m->nlevel).size();

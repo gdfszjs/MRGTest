@@ -14,14 +14,15 @@ int main()
 	MRGPattern *a = new MRGPattern;
 	string e = "D:\\MRGFIle\\1\\1\\";
 	mrg.initialize(a, e);
-	mrg.CheckMRGPattern(a);
+	mrg.CheckMRGPattern(a,e);
 	//mrg.showLevelRangeNodeNumber(a);
 
 	//the other pattern
 	cout << "creating MRG2..." << endl;
 	MRGPattern *b = new MRGPattern;
-	string es = "D:\\MRGFIle\\2\\1\\";
-	mrg.initialize(b, es);
+	e = "D:\\MRGFIle\\2\\1\\";
+	mrg.initialize(b, e);
+	mrg.CheckMRGPattern(b, e);
 	//mrg.showLevelRangeNodeNumber(b);
 
 	//match two pattern

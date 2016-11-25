@@ -124,7 +124,7 @@ public:
 	//show all the message in a node
 	void showAllMesasgeinNode(ofstream f1, MRGNode *e);
 	//check MRGPattern
-	void CheckMRGPattern(MRGPattern *e);
+	void CheckMRGPattern(MRGPattern *e, string ss);
 
 	/*
 		function fot the graph comparation
@@ -139,7 +139,8 @@ public:
 	NodePair* findmatchingpair(MRGPattern * a, MRGPattern * b);
 	bool compareMLIST(MRGNode *m, MRGNode *n);
 	bool findParentinMLIST(MRGNode *m, MRGNode *n);
-	void extendMLIST(MRGPattern * a,MRGNode *m);
+	void spreadMLIST(MRGPattern *a, MRGPattern *b, MRGNode *m, MRGNode *n);
+	void extendMLISTinOneDirection(MRGPattern * a,MRGNode *m,int direcion);
 	int mat(MRGPattern *a, MRGPattern *b,MRGNode *m, MRGNode *n);
 	int calculateResult();
 	void printNLIST();
